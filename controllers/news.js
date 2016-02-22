@@ -22,8 +22,6 @@ mongoose.connect('mongodb://52.30.41.250/ireland8');
 var News = require('../models/news').News
 
 
-
-
 //==========add daily task========//
 var CronJob = require('cron').CronJob;
 function addScheduledTask(time, task) {
@@ -59,9 +57,18 @@ addScheduledTask(time6, task)
 //==========check update===========//
 function checkUpdates() {
     //today's 0:00
-    var gap = new Date(parseInt(new Date().setHours(0, 0, 0, 0)))
-    var timestamp = getLatestTimestamp()//return the latest timestamp
-
+    var gap = new Date(parseInt(new Date().setHours(0, 0, 0, 0))).getTime() / 1000
+    console.log("today's midnight "+ gap);
+    
+    //async callback, return the latest timestamp
+    var timestamp = News.find({}).sort('-update_time').limit(1).exec(function (err, news) {
+        if (!err) {
+            var latest_timestamp = JSON.parse(JSON.stringify(news[0])).update_time;
+            console.log("the latest timestamp record in db " + latest_timestamp);
+            return latest_timestamp;
+        }
+    })
+    
     //not updated yet, try again
     if (timestamp - gap < 0) {
         updateNews();
@@ -69,18 +76,6 @@ function checkUpdates() {
 }
 //==========check update===========//
 
-//==========get latest timestamp=========//
-function getLatestTimestamp() {
-    var timestamp = 0;
-    News.find({}).sort('-update_time').limit(1).exec(function (err, news) {
-        if (!err) {
-            var latest_timestamp = JSON.parse(JSON.stringify(news[0])).update_time
-            timestamp = latest_timestamp;
-        }
-    })
-    return timestamp;
-}
-//==========get latest timestamp=========//
 
 //update action, 500 req limit/month
 function updateNews() {
