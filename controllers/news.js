@@ -24,19 +24,17 @@ var News = require('../models/news').News
 
 //==========add daily task========//
 var CronJob = require('cron').CronJob;
-function addScheduledTask(time, task) {
+function addScheduledTask(time) {
     var job = new CronJob({
         cronTime: time,
         onTick: function () {
-            task()
+            checkUpdates()
         },
         start: false,
         timeZone: 'Europe/Dublin'
     });
     job.start();
 }
-
-var task = checkUpdates();
 
 var time1 = '00 00 12 * * 1-5';
 var time2 = '00 00 13 * * 1-5';
@@ -46,12 +44,12 @@ var time4 = '00 00 16 * * 1-5';
 var time5 = '00 00 10 * * 6-7';
 var time6 = '00 00 12 * * 6-7';
 
-addScheduledTask(time1, task)
-addScheduledTask(time2, task)
-addScheduledTask(time3, task)
-addScheduledTask(time4, task)
-addScheduledTask(time5, task)
-addScheduledTask(time6, task)
+addScheduledTask(time1)
+addScheduledTask(time2)
+addScheduledTask(time3)
+addScheduledTask(time4)
+addScheduledTask(time5)
+addScheduledTask(time6)
 //==========add daily task========//
 
 //==========check update===========//
