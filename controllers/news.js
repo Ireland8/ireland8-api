@@ -56,21 +56,21 @@ addScheduledTask(time6)
 function checkUpdates() {
     //today's 0:00
     var gap = new Date(parseInt(new Date().setHours(0, 0, 0, 0))).getTime() / 1000
-    console.log("today's midnight "+ gap);
+    console.log("today's midnight " + gap);
     
     //async callback, return the latest timestamp
-    var timestamp = News.find({}).sort('-update_time').limit(1).exec(function (err, news) {
+    News.find({}).sort('-update_time').limit(1).exec(function (err, news) {
         if (!err) {
             var latest_timestamp = JSON.parse(JSON.stringify(news[0])).update_time;
             console.log("the latest timestamp record in db " + latest_timestamp);
-            return latest_timestamp;
+            //not updated yet, try again
+            if (latest_timestamp - gap < 0) {
+                updateNews();
+            }
         }
     })
-    
-    //not updated yet, try again
-    if (timestamp - gap < 0) {
-        updateNews();
-    }
+
+
 }
 //==========check update===========//
 
@@ -160,7 +160,7 @@ function getNews(req, res) {
                 var ns = json.update_time;
                 var parsed_date = getLocalTime(ns);
                 delete json.update_time;
-                console.log(parsed_date)
+                // console.log(parsed_date)
                 json.update_time = parsed_date;
                 arr.push(json)
             }
