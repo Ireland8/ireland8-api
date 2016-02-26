@@ -12,6 +12,9 @@ var appid = 'wx6152a2be5b8d5d66';
 var appsecret = '55833021cb21b753aa6aed198249697a';
 var api = new WechatAPI(appid, appsecret);
 
+//set urllib's default ttl
+api.setOpts({timeout: 20000});
+
 //connect to db
 var mongoose = require('mongoose')
 
@@ -21,6 +24,8 @@ mongoose.connect('mongodb://52.30.41.250/ireland8');
 //import news model
 var News = require('../models/news').News
 
+//update every reboot
+updateNews();
 
 //==========add daily task========//
 var CronJob = require('cron').CronJob;
