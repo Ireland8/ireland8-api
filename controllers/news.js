@@ -19,7 +19,7 @@ api.setOpts({timeout: 20000});
 var mongoose = require('mongoose')
 
 //api.ireland8.com not working? cloudflare dns!
-mongoose.connect('mongodb://52.30.41.250/ireland8');
+mongoose.connect('mongodb://52.17.83.25/ireland8');
 
 //import news model
 var News = require('../models/news').News
